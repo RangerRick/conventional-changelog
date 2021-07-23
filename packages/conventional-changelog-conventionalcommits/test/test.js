@@ -1,17 +1,17 @@
 'use strict'
-var conventionalChangelogCore = require('conventional-changelog-core')
-var getPreset = require('../')
-var preset = getPreset()
-var expect = require('chai').expect
-var mocha = require('mocha')
-var describe = mocha.describe
-var it = mocha.it
-var gitDummyCommit = require('git-dummy-commit')
-var shell = require('shelljs')
-var through = require('through2')
-var path = require('path')
-var betterThanBefore = require('better-than-before')()
-var preparing = betterThanBefore.preparing
+const conventionalChangelogCore = require('conventional-changelog-core')
+const getPreset = require('../')
+const preset = getPreset()
+const expect = require('chai').expect
+const mocha = require('mocha')
+const describe = mocha.describe
+const it = mocha.it
+const gitDummyCommit = require('git-dummy-commit')
+const shell = require('shelljs')
+const through = require('through2')
+const path = require('path')
+const betterThanBefore = require('better-than-before')()
+const preparing = betterThanBefore.preparing
 
 betterThanBefore.setups([
   function () {
@@ -33,6 +33,8 @@ betterThanBefore.setups([
     gitDummyCommit('fix(*): oops')
     gitDummyCommit(['fix(changelog): proper issue links', ' see GH-1'])
     gitDummyCommit(['feat(awesome): adress EXAMPLE-1'])
+    gitDummyCommit(['chore(deps): upgrade example from 1 to 2'])
+    gitDummyCommit(['chore(release): release 0.0.0'])
   },
   function () {
     gitDummyCommit(['feat(awesome): addresses the issue brought up in #133'])
@@ -53,7 +55,11 @@ betterThanBefore.setups([
   },
   function () {
     shell.exec('git tag v0.1.0')
-    gitDummyCommit('feat: some more features')
+    gitDummyCommit('feat: some more feats')
+  },
+  function () {
+    shell.exec('git tag v0.2.0')
+    gitDummyCommit('feature: some more features')
   },
   function () {
     gitDummyCommit(['feat(*): implementing #5 by @dlmr', ' closes #10'])
@@ -74,6 +80,12 @@ betterThanBefore.setups([
   function () {
     gitDummyCommit(['Revert \\"feat: default revert format\\"', 'This reverts commit 1234.'])
     gitDummyCommit(['revert: feat: custom revert format', 'This reverts commit 5678.'])
+  },
+  function () {
+    gitDummyCommit([
+      'chore: release at different version',
+      'Release-As: v3.0.2'
+    ])
   }
 ])
 
@@ -167,6 +179,29 @@ describe('conventionalcommits.org preset', function () {
 
         expect(chunk).to.not.include('make it faster')
         expect(chunk).to.not.include('Reverts')
+        done()
+      }))
+  })
+
+  it('should allow matching "scope" to configuration', function (done) {
+    preparing(1)
+    conventionalChangelogCore({
+      config: require('../')({
+        types: [
+          { type: 'chore', scope: 'deps', section: 'Dependencies' }
+        ]
+      })
+    })
+      .on('error', function (err) {
+        done(err)
+      })
+      .pipe(through(function (chunk) {
+        chunk = chunk.toString()
+
+        expect(chunk).to.include('### Dependencies')
+        expect(chunk).to.include('**deps:** upgrade example from 1 to 2')
+
+        expect(chunk).to.not.include('release 0.0.0')
         done()
       }))
   })
@@ -320,7 +355,32 @@ describe('conventionalcommits.org preset', function () {
 
   it('should work if there is a semver tag', function (done) {
     preparing(6)
-    var i = 0
+    let i = 0
+
+    conventionalChangelogCore({
+      config: preset,
+      outputUnreleased: true
+    })
+      .on('error', function (err) {
+        done(err)
+      })
+      .pipe(through(function (chunk, enc, cb) {
+        chunk = chunk.toString()
+
+        expect(chunk).to.include('some more feats')
+        expect(chunk).to.not.include('BREAKING')
+
+        i++
+        cb()
+      }, function () {
+        expect(i).to.equal(1)
+        done()
+      }))
+  })
+
+  it('should support "feature" as alias for "feat"', function (done) {
+    preparing(7)
+    let i = 0
 
     conventionalChangelogCore({
       config: preset,
@@ -344,8 +404,8 @@ describe('conventionalcommits.org preset', function () {
   })
 
   it('should work with unknown host', function (done) {
-    preparing(6)
-    var i = 0
+    preparing(7)
+    let i = 0
 
     conventionalChangelogCore({
       config: require('../')({
@@ -374,8 +434,8 @@ describe('conventionalcommits.org preset', function () {
   })
 
   it('should work specifying where to find a package.json using conventional-changelog-core', function (done) {
-    preparing(7)
-    var i = 0
+    preparing(8)
+    let i = 0
 
     conventionalChangelogCore({
       config: preset,
@@ -402,8 +462,8 @@ describe('conventionalcommits.org preset', function () {
   })
 
   it('should fallback to the closest package.json when not providing a location for a package.json', function (done) {
-    preparing(7)
-    var i = 0
+    preparing(8)
+    let i = 0
 
     conventionalChangelogCore({
       config: preset
@@ -428,7 +488,7 @@ describe('conventionalcommits.org preset', function () {
   })
 
   it('should support non public GitHub repository locations', function (done) {
-    preparing(7)
+    preparing(8)
 
     conventionalChangelogCore({
       config: preset,
@@ -453,7 +513,7 @@ describe('conventionalcommits.org preset', function () {
   })
 
   it('should only replace with link to user if it is an username', function (done) {
-    preparing(8)
+    preparing(9)
 
     conventionalChangelogCore({
       config: preset
@@ -474,7 +534,7 @@ describe('conventionalcommits.org preset', function () {
   })
 
   it('supports multiple lines of footer information', function (done) {
-    preparing(8)
+    preparing(9)
 
     conventionalChangelogCore({
       config: preset
@@ -492,7 +552,7 @@ describe('conventionalcommits.org preset', function () {
   })
 
   it('does not require that types are case sensitive', function (done) {
-    preparing(8)
+    preparing(9)
 
     conventionalChangelogCore({
       config: preset
@@ -508,7 +568,7 @@ describe('conventionalcommits.org preset', function () {
   })
 
   it('populates breaking change if ! is present', function (done) {
-    preparing(8)
+    preparing(9)
 
     conventionalChangelogCore({
       config: preset
@@ -524,7 +584,7 @@ describe('conventionalcommits.org preset', function () {
   })
 
   it('parses both default (Revert "<subject>") and custom (revert: <subject>) revert commits', function (done) {
-    preparing(9)
+    preparing(10)
 
     conventionalChangelogCore({
       config: preset
@@ -536,6 +596,21 @@ describe('conventionalcommits.org preset', function () {
         chunk = chunk.toString()
         expect(chunk).to.match(/custom revert format/)
         expect(chunk).to.match(/default revert format/)
+        done()
+      }))
+  })
+  it('should include commits with "Release-As:" footer in CHANGELOG', function (done) {
+    preparing(11)
+
+    conventionalChangelogCore({
+      config: preset
+    })
+      .on('error', function (err) {
+        done(err)
+      })
+      .pipe(through(function (chunk) {
+        chunk = chunk.toString()
+        expect(chunk).to.match(/release at different version/)
         done()
       }))
   })

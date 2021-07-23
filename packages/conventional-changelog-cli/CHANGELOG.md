@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1](https://github.com/conventional-changelog/conventional-changelog/compare/conventional-changelog-cli@2.1.0...conventional-changelog-cli@2.1.1) (2020-11-05)
+
+**Note:** Version bump only for package conventional-changelog-cli
+
+
+
+
+
+# [2.1.0](https://github.com/conventional-changelog/conventional-changelog/compare/conventional-changelog-cli@2.0.35...conventional-changelog-cli@2.1.0) (2020-08-12)
+
+
+### Features
+
+* add support for '--skip-unstable' option ([#656](https://github.com/conventional-changelog/conventional-changelog/issues/656)) ([#656](https://github.com/conventional-changelog/conventional-changelog/issues/656)) ([0679d7a](https://github.com/conventional-changelog/conventional-changelog/commit/0679d7a1d7a8715918326f31ec3f6168c2341fd6))
+
+
+
+
+
+## [2.0.35](https://github.com/conventional-changelog/conventional-changelog/compare/conventional-changelog-cli@2.0.34...conventional-changelog-cli@2.0.35) (2020-06-20)
+
+**Note:** Version bump only for package conventional-changelog-cli
+
+
+
+
+
+## [2.0.34](https://github.com/conventional-changelog/conventional-changelog/compare/conventional-changelog-cli@2.0.33...conventional-changelog-cli@2.0.34) (2020-05-08)
+
+
+### Bug Fixes
+
+* **deps:** address CVE in meow ([#642](https://github.com/conventional-changelog/conventional-changelog/issues/642)) ([46311d2](https://github.com/conventional-changelog/conventional-changelog/commit/46311d2932b367f370d06c4e447b8dcf4bc4e83f))
+
+
+
+
+
+## [2.0.33](https://github.com/conventional-changelog/conventional-changelog/compare/conventional-changelog-cli@2.0.29...conventional-changelog-cli@2.0.33) (2020-05-08)
+
+
+### Bug Fixes
+
+* **deps:** update yargs-parser to move off a flagged-vulnerable version. ([#635](https://github.com/conventional-changelog/conventional-changelog/issues/635)) ([aafc0f0](https://github.com/conventional-changelog/conventional-changelog/commit/aafc0f00412c3e4b23b8418300e5a570a48fe24d))
+
+
+
+
+
 ## [2.0.29](https://github.com/conventional-changelog/conventional-changelog/compare/conventional-changelog-cli@2.0.28...conventional-changelog-cli@2.0.29) (2019-11-21)
 
 **Note:** Version bump only for package conventional-changelog-cli
