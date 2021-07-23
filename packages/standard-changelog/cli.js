@@ -26,8 +26,8 @@ const cli = meow(`
     -r, --release-count       How many releases to be generated from the latest
     -m, --merge-commit-filter Configure how to handle merge commits. Must be one of the following:
                                 exclude: Merge commits will be ignored.
-                                include: Merge commits will be included. 
-                                only-merges: Only merge commits will be processed. 
+                                include: Merge commits will be included.
+                                only-merges: Only merge commits will be processed.
                                 Default: exclude
     -v, --verbose             Verbose output
     -c, --context             A filepath of a json that is used to define template variables
